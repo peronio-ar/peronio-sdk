@@ -1,7 +1,7 @@
 {
   "name": "peronio-sdk",
   "license": "MIT",
-  "version": "0.5.0",
+  "version": "0.6.2",
   "description": "🛠 An SDK for building applications on top of Pancakeswap.",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
