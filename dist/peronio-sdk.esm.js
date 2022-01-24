@@ -1509,6 +1509,58 @@ var Router = /*#__PURE__*/function () {
   return Router;
 }();
 
+var ZERO_HEX$1 = '0x0';
+
+function toHex$1(currencyAmount) {
+  return "0x" + currencyAmount.raw.toString(16);
+}
+/**
+ * Represents the Pancake Router, and has static methods for helping execute minting.
+ */
+
+
+var Minter = /*#__PURE__*/function () {
+  /**
+   * Cannot be constructed.
+   */
+  function Minter() {}
+  /**
+   * Produces the on-chain method name to call and the hex encoded parameters to pass as arguments for a given mint.
+   * @param mint to produce call parameters for
+   * @param options options for the call parameters
+   */
+
+
+  Minter.mintCallParameters = function mintCallParameters(mint, options) {
+    var to = validateAndParseAddress(options.recipient); // const amountIn: string = toHex(mint.inputAmount)
+
+    var amountOut = toHex$1(mint.outputAmount);
+    return {
+      methodName: 'mint',
+      args: [to, amountOut],
+      value: ZERO_HEX$1
+    };
+  }
+  /**
+   * Produces the on-chain method name to call and the hex encoded parameters to pass as arguments for a given mint.
+   * @param mint to produce call parameters for
+   * @param options options for the call parameters
+   */
+  ;
+
+  Minter.withdrawCallParameters = function withdrawCallParameters(withdraw, options) {
+    var to = validateAndParseAddress(options.recipient);
+    var amountIn = toHex$1(withdraw.inputAmount);
+    return {
+      methodName: 'withdraw',
+      args: [to, amountIn],
+      value: ZERO_HEX$1
+    };
+  };
+
+  return Minter;
+}();
+
 var ERC20 = [
 	{
 		constant: true,
@@ -1617,5 +1669,5 @@ var Fetcher = /*#__PURE__*/function () {
   return Fetcher;
 }();
 
-export { ChainId, Currency, CurrencyAmount, ETHER, FACTORY_ADDRESS, Fetcher, Fraction, INIT_CODE_HASH, InsufficientInputAmountError, InsufficientReservesError, MINIMUM_LIQUIDITY, Mint, Pair, Percent, Price, Rounding, Route, Router, Token, TokenAmount, Trade, TradeType, WETH, Withdraw, currencyEquals, inputOutputComparator, tradeComparator };
+export { ChainId, Currency, CurrencyAmount, ETHER, FACTORY_ADDRESS, Fetcher, Fraction, INIT_CODE_HASH, InsufficientInputAmountError, InsufficientReservesError, MINIMUM_LIQUIDITY, Mint, Minter, Pair, Percent, Price, Rounding, Route, Router, Token, TokenAmount, Trade, TradeType, WETH, Withdraw, currencyEquals, inputOutputComparator, tradeComparator };
 //# sourceMappingURL=peronio-sdk.esm.js.map
