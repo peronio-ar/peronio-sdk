@@ -36,6 +36,9 @@ export const _100 = JSBI.BigInt(100)
 export const FEES_NUMERATOR = JSBI.BigInt(997)
 export const FEES_DENOMINATOR = JSBI.BigInt(1000)
 
+// Minter fee
+export const MINT_FEE = JSBI.BigInt(0.05)
+
 export enum SolidityType {
   uint8 = 'uint8',
   uint256 = 'uint256',

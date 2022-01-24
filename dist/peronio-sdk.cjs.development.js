@@ -47,7 +47,7 @@ var FIVE = /*#__PURE__*/JSBI.BigInt(5);
 var TEN = /*#__PURE__*/JSBI.BigInt(10);
 var _100 = /*#__PURE__*/JSBI.BigInt(100);
 var FEES_NUMERATOR = /*#__PURE__*/JSBI.BigInt(997);
-var FEES_DENOMINATOR = /*#__PURE__*/JSBI.BigInt(1000);
+var FEES_DENOMINATOR = /*#__PURE__*/JSBI.BigInt(1000); // Minter fee
 var SolidityType;
 
 (function (SolidityType) {
@@ -988,6 +988,58 @@ var Route = /*#__PURE__*/function () {
   return Route;
 }();
 
+/**
+ * Represents a mint executed to the vault.
+ */
+
+var Mint = /*#__PURE__*/function () {
+  /**
+   *
+   * @param inputAmount Underlying asset
+   * @param outputAmount Token minted
+   * @param feePercent Example 5. Represents 5%
+   */
+  function Mint(inputAmount, outputAmount, feePercent) {
+    var amount = JSBI.toNumber(inputAmount.raw);
+    this.inputAmount = inputAmount;
+    this.outputAmount = outputAmount;
+    this.feeAmount = amount - amount / (1 + feePercent / 100);
+    this.executionPrice = new Price(this.inputAmount.currency, this.outputAmount.currency, this.inputAmount.raw, this.outputAmount.raw);
+  }
+  /**
+   * Constructs an exact in trade with the given amount in and route
+   * @param route route of the exact in trade
+   * @param amountIn the amount being passed in
+   */
+
+
+  Mint.exactIn = function exactIn(amountIn) {
+    console.info(amountIn);
+    return new Mint(amountIn, amountIn, 5);
+  }
+  /**
+   * Constructs an exact out trade with the given amount out and route
+   * @param route route of the exact out trade
+   * @param amountOut the amount returned by the trade
+   */
+  ;
+
+  Mint.exactOut = function exactOut(amountOut) {
+    return new Mint(amountOut, amountOut, 5);
+  };
+
+  return Mint;
+}();
+/**
+ * Represents a mint executed to the vault.
+ */
+
+var Withdraw = function Withdraw(inputAmount, outputAmount) {
+  this.inputAmount = inputAmount;
+  this.outputAmount = outputAmount;
+  this.executionPrice = new Price(this.inputAmount.currency, this.outputAmount.currency, this.inputAmount.raw, this.outputAmount.raw);
+}; // .subtract(inputAmount.divide(100 + feePercent) / 1))
+
 var _100_PERCENT = /*#__PURE__*/new Fraction(_100);
 
 var Percent = /*#__PURE__*/function (_Fraction) {
@@ -1576,6 +1628,7 @@ exports.INIT_CODE_HASH = INIT_CODE_HASH;
 exports.InsufficientInputAmountError = InsufficientInputAmountError;
 exports.InsufficientReservesError = InsufficientReservesError;
 exports.MINIMUM_LIQUIDITY = MINIMUM_LIQUIDITY;
+exports.Mint = Mint;
 exports.Pair = Pair;
 exports.Percent = Percent;
 exports.Price = Price;
@@ -1585,6 +1638,7 @@ exports.Token = Token;
 exports.TokenAmount = TokenAmount;
 exports.Trade = Trade;
 exports.WETH = WETH;
+exports.Withdraw = Withdraw;
 exports.currencyEquals = currencyEquals;
 exports.inputOutputComparator = inputOutputComparator;
 exports.tradeComparator = tradeComparator;
