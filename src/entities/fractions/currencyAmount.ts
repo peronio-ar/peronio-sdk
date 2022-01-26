@@ -23,7 +23,7 @@ export class CurrencyAmount extends Fraction {
   }
 
   // amount _must_ be raw, i.e. in the native representation
-  protected constructor(currency: Currency, amount: BigintIsh) {
+  public constructor(currency: Currency, amount: BigintIsh) {
     const parsedAmount = parseBigintIsh(amount)
     validateSolidityTypeInstance(parsedAmount, SolidityType.uint256)
 

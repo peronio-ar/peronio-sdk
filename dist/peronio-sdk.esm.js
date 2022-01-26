@@ -988,58 +988,6 @@ var Route = /*#__PURE__*/function () {
   return Route;
 }();
 
-/**
- * Represents a mint executed to the vault.
- */
-
-var Mint = /*#__PURE__*/function () {
-  /**
-   *
-   * @param inputAmount Underlying asset
-   * @param outputAmount Token minted
-   * @param feePercent Example 5. Represents 5%
-   */
-  function Mint(inputAmount, outputAmount, feePercent) {
-    var amount = JSBI.toNumber(inputAmount.raw);
-    this.inputAmount = inputAmount;
-    this.outputAmount = outputAmount;
-    this.feeAmount = amount - amount / (1 + feePercent / 100);
-    this.executionPrice = new Price(this.inputAmount.currency, this.outputAmount.currency, this.inputAmount.raw, this.outputAmount.raw);
-  }
-  /**
-   * Constructs an exact in trade with the given amount in and route
-   * @param route route of the exact in trade
-   * @param amountIn the amount being passed in
-   */
-
-
-  Mint.exactIn = function exactIn(amountIn) {
-    console.info(amountIn);
-    return new Mint(amountIn, amountIn, 5);
-  }
-  /**
-   * Constructs an exact out trade with the given amount out and route
-   * @param route route of the exact out trade
-   * @param amountOut the amount returned by the trade
-   */
-  ;
-
-  Mint.exactOut = function exactOut(amountOut) {
-    return new Mint(amountOut, amountOut, 5);
-  };
-
-  return Mint;
-}();
-/**
- * Represents a mint executed to the vault.
- */
-
-var Withdraw = function Withdraw(inputAmount, outputAmount) {
-  this.inputAmount = inputAmount;
-  this.outputAmount = outputAmount;
-  this.executionPrice = new Price(this.inputAmount.currency, this.outputAmount.currency, this.inputAmount.raw, this.outputAmount.raw);
-}; // .subtract(inputAmount.divide(100 + feePercent) / 1))
-
 var _100_PERCENT = /*#__PURE__*/new Fraction(_100);
 
 var Percent = /*#__PURE__*/function (_Fraction) {
@@ -1069,6 +1017,78 @@ var Percent = /*#__PURE__*/function (_Fraction) {
 
   return Percent;
 }(Fraction);
+
+/* eslint-disable lines-between-class-members */
+/**
+ * Represents a mint executed to the vault.
+ */
+
+var Mint = /*#__PURE__*/function () {
+  /**
+   *
+   * @param inputAmount Underlying asset
+   * @param outputAmount Token minted
+   * @param markupPercent Example 5. Represents 5%
+   */
+  function Mint(inputAmount, outputAmount, markupPercent) {
+    this.inputAmount = inputAmount;
+    this.outputAmount = outputAmount;
+    this.markup = markupPercent; // new CurrencyAmount(inputAmount.currency, inputAmount.multiply()
+
+    var amount = JSBI.toNumber(inputAmount.raw);
+    var markupPercentFixed = parseFloat(markupPercent.toFixed(6));
+    this.feeAmount = (amount - amount / (1 + markupPercentFixed)) / 1000000;
+    this.executionPrice = new Price(this.inputAmount.currency, this.outputAmount.currency, this.inputAmount.raw, this.outputAmount.raw);
+  }
+  /**
+   * Constructs a Mint object based on exact token minted amount
+   * @param currencyAmountIn (USDT)
+   * @param price (base: PE, quote: USDT)
+   * @param markup
+   * @returns
+   */
+
+
+  Mint.exactIn = function exactIn(currencyAmountIn, price, markup) {
+    if (price.quoteCurrency !== currencyAmountIn.currency) {
+      throw new Error("currencyAmountOut does't match Price.baseCurrency");
+    }
+
+    var currencyAmountOut = price.quote(currencyAmountIn);
+    return new Mint(currencyAmountIn, currencyAmountOut, markup);
+  }
+  /**
+   * Constructs a Mint object based on exact token deposited amount
+   * @param currencyAmountOut (PE)
+   * @param _price (base: PE, quote: USDT)
+   * @param markup
+   * @returns
+   */
+  ;
+
+  Mint.exactOut = function exactOut(currencyAmountOut, _price, markup) {
+    var price = _price.invert(); // Price now (base: USDT, quote: PE)
+
+
+    if (price.quoteCurrency !== currencyAmountOut.currency) {
+      throw new Error("currencyAmountOut does't match Price.baseCurrency");
+    }
+
+    var currencyAmountIn = price.quote(currencyAmountOut);
+    return new Mint(currencyAmountIn, currencyAmountOut, markup);
+  };
+
+  return Mint;
+}();
+/**
+ * Represents a mint executed to the vault.
+ */
+
+var Withdraw = function Withdraw(inputAmount, outputAmount) {
+  this.inputAmount = inputAmount;
+  this.outputAmount = outputAmount;
+  this.executionPrice = new Price(this.inputAmount.currency, this.outputAmount.currency, this.inputAmount.raw, this.outputAmount.raw);
+}; // .subtract(inputAmount.divide(100 + feePercent) / 1))
 
 /**
  * Returns the percent difference between the mid price and the execution price, i.e. price impact.

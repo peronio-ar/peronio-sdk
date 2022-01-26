@@ -1,7 +1,6 @@
 /* eslint-disable lines-between-class-members */
-import { CurrencyAmount } from './fractions/currencyAmount'
-import { Price } from './fractions/price'
 import JSBI from 'jsbi'
+import { Price, Percent, CurrencyAmount } from './fractions'
 
 /**
  * Represents a mint executed to the vault.
@@ -26,18 +25,27 @@ export class Mint {
   public readonly feeAmount: number
 
   /**
+   * The input amount for the trade assuming no slippage.
+   */
+  public readonly markup: Percent
+
+  /**
    *
    * @param inputAmount Underlying asset
    * @param outputAmount Token minted
-   * @param feePercent Example 5. Represents 5%
+   * @param markupPercent Example 5. Represents 5%
    */
-  public constructor(inputAmount: CurrencyAmount, outputAmount: CurrencyAmount, feePercent: number) {
-    const amount = JSBI.toNumber(inputAmount.raw)
-
+  public constructor(inputAmount: CurrencyAmount, outputAmount: CurrencyAmount, markupPercent: Percent) {
     this.inputAmount = inputAmount
     this.outputAmount = outputAmount
 
-    this.feeAmount = amount - amount / (1 + feePercent / 100)
+    this.markup = markupPercent
+    // new CurrencyAmount(inputAmount.currency, inputAmount.multiply()
+    const amount = JSBI.toNumber(inputAmount.raw)
+    const markupPercentFixed = parseFloat(markupPercent.toFixed(6))
+
+    this.feeAmount = (amount - amount / (1 + markupPercentFixed)) / 1000000
+
     this.executionPrice = new Price(
       this.inputAmount.currency,
       this.outputAmount.currency,
@@ -47,22 +55,36 @@ export class Mint {
   }
 
   /**
-   * Constructs an exact in trade with the given amount in and route
-   * @param route route of the exact in trade
-   * @param amountIn the amount being passed in
+   * Constructs a Mint object based on exact token minted amount
+   * @param currencyAmountIn (USDT)
+   * @param price (base: PE, quote: USDT)
+   * @param markup
+   * @returns
    */
-  public static exactIn(amountIn: CurrencyAmount): Mint {
-    console.info(amountIn)
-    return new Mint(amountIn, amountIn, 5)
+  public static exactIn(currencyAmountIn: CurrencyAmount, price: Price, markup: Percent): Mint {
+    if (price.quoteCurrency !== currencyAmountIn.currency) {
+      throw new Error(`currencyAmountOut does\'t match Price.baseCurrency`)
+    }
+
+    const currencyAmountOut = price.quote(currencyAmountIn)
+    return new Mint(currencyAmountIn, currencyAmountOut, markup)
   }
 
   /**
-   * Constructs an exact out trade with the given amount out and route
-   * @param route route of the exact out trade
-   * @param amountOut the amount returned by the trade
+   * Constructs a Mint object based on exact token deposited amount
+   * @param currencyAmountOut (PE)
+   * @param _price (base: PE, quote: USDT)
+   * @param markup
+   * @returns
    */
-  public static exactOut(amountOut: CurrencyAmount): Mint {
-    return new Mint(amountOut, amountOut, 5)
+  public static exactOut(currencyAmountOut: CurrencyAmount, _price: Price, markup: Percent): Mint {
+    const price = _price.invert() // Price now (base: USDT, quote: PE)
+    if (price.quoteCurrency !== currencyAmountOut.currency) {
+      throw new Error(`currencyAmountOut does\'t match Price.baseCurrency`)
+    }
+
+    const currencyAmountIn = price.quote(currencyAmountOut)
+    return new Mint(currencyAmountIn, currencyAmountOut, markup)
   }
 }
 

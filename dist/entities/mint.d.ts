@@ -1,5 +1,4 @@
-import { CurrencyAmount } from './fractions/currencyAmount';
-import { Price } from './fractions/price';
+import { Price, Percent, CurrencyAmount } from './fractions';
 /**
  * Represents a mint executed to the vault.
  */
@@ -21,24 +20,32 @@ export declare class Mint {
      */
     readonly feeAmount: number;
     /**
+     * The input amount for the trade assuming no slippage.
+     */
+    readonly markup: Percent;
+    /**
      *
      * @param inputAmount Underlying asset
      * @param outputAmount Token minted
-     * @param feePercent Example 5. Represents 5%
+     * @param markupPercent Example 5. Represents 5%
      */
-    constructor(inputAmount: CurrencyAmount, outputAmount: CurrencyAmount, feePercent: number);
+    constructor(inputAmount: CurrencyAmount, outputAmount: CurrencyAmount, markupPercent: Percent);
     /**
-     * Constructs an exact in trade with the given amount in and route
-     * @param route route of the exact in trade
-     * @param amountIn the amount being passed in
+     * Constructs a Mint object based on exact token minted amount
+     * @param currencyAmountIn (USDT)
+     * @param price (base: PE, quote: USDT)
+     * @param markup
+     * @returns
      */
-    static exactIn(amountIn: CurrencyAmount): Mint;
+    static exactIn(currencyAmountIn: CurrencyAmount, price: Price, markup: Percent): Mint;
     /**
-     * Constructs an exact out trade with the given amount out and route
-     * @param route route of the exact out trade
-     * @param amountOut the amount returned by the trade
+     * Constructs a Mint object based on exact token deposited amount
+     * @param currencyAmountOut (PE)
+     * @param _price (base: PE, quote: USDT)
+     * @param markup
+     * @returns
      */
-    static exactOut(amountOut: CurrencyAmount): Mint;
+    static exactOut(currencyAmountOut: CurrencyAmount, _price: Price, markup: Percent): Mint;
 }
 /**
  * Represents a mint executed to the vault.
