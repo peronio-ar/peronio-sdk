@@ -1036,8 +1036,9 @@ var Mint = /*#__PURE__*/function () {
     this.markup = markupPercent; // new CurrencyAmount(inputAmount.currency, inputAmount.multiply()
 
     var amount = JSBI.toNumber(inputAmount.raw);
-    var markupPercentFixed = parseFloat(markupPercent.toFixed(6));
-    this.feeAmount = (amount - amount / (1 + markupPercentFixed)) / 1000000;
+    var markupPercentFixed = parseFloat(markupPercent.toFixed(6)) / 100;
+    this.feeAmount = (amount - amount / (1 + markupPercentFixed)) / 1000000; // this.feeAmount = (amount - amount / (1 + markupPercentFixed)) / 1000000
+
     this.executionPrice = new Price(this.inputAmount.currency, this.outputAmount.currency, this.inputAmount.raw, this.outputAmount.raw);
   }
   /**

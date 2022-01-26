@@ -42,9 +42,10 @@ export class Mint {
     this.markup = markupPercent
     // new CurrencyAmount(inputAmount.currency, inputAmount.multiply()
     const amount = JSBI.toNumber(inputAmount.raw)
-    const markupPercentFixed = parseFloat(markupPercent.toFixed(6))
+    const markupPercentFixed = parseFloat(markupPercent.toFixed(6)) / 100
 
     this.feeAmount = (amount - amount / (1 + markupPercentFixed)) / 1000000
+    // this.feeAmount = (amount - amount / (1 + markupPercentFixed)) / 1000000
 
     this.executionPrice = new Price(
       this.inputAmount.currency,
