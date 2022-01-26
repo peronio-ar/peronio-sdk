@@ -1,11 +1,10 @@
 /* eslint-disable lines-between-class-members */
-import JSBI from 'jsbi'
-import { Price, Percent, CurrencyAmount } from './fractions'
+import { Price, CurrencyAmount } from './fractions'
 
 /**
  * Represents a mint executed to the vault.
  */
-export class Mint {
+export class Withdraw {
   /**
    * The input amount for the trade assuming no slippage.
    */
@@ -19,34 +18,9 @@ export class Mint {
    */
   public readonly executionPrice: Price
 
-  /**
-   * The input amount for the trade assuming no slippage.
-   */
-  public readonly feeAmount: number
-
-  /**
-   * The input amount for the trade assuming no slippage.
-   */
-  public readonly markup: Percent
-
-  /**
-   *
-   * @param inputAmount Underlying asset
-   * @param outputAmount Token minted
-   * @param markupPercent Example 5. Represents 5%
-   */
-  public constructor(inputAmount: CurrencyAmount, outputAmount: CurrencyAmount, markupPercent: Percent) {
+  public constructor(inputAmount: CurrencyAmount, outputAmount: CurrencyAmount) {
     this.inputAmount = inputAmount
     this.outputAmount = outputAmount
-
-    this.markup = markupPercent
-    // new CurrencyAmount(inputAmount.currency, inputAmount.multiply()
-    const amount = JSBI.toNumber(inputAmount.raw)
-    const markupPercentFixed = parseFloat(markupPercent.toFixed(6)) / 100
-
-    this.feeAmount = (amount - amount / (1 + markupPercentFixed)) / 1000000
-    // this.feeAmount = (amount - amount / (1 + markupPercentFixed)) / 1000000
-
     this.executionPrice = new Price(
       this.inputAmount.currency,
       this.outputAmount.currency,
@@ -57,18 +31,17 @@ export class Mint {
 
   /**
    * Constructs a Mint object based on exact token minted amount
-   * @param currencyAmountIn (USDT)
+   * @param currencyAmountIn (PE)
    * @param price (base: PE, quote: USDT)
-   * @param markup
    * @returns
    */
-  public static exactIn(currencyAmountIn: CurrencyAmount, price: Price, markup: Percent): Mint {
-    if (price.quoteCurrency !== currencyAmountIn.currency) {
+  public static exactIn(currencyAmountIn: CurrencyAmount, price: Price): Withdraw {
+    if (price.baseCurrency !== currencyAmountIn.currency) {
       throw new Error(`currencyAmountOut does\'t match Price.baseCurrency`)
     }
 
     const currencyAmountOut = price.quote(currencyAmountIn)
-    return new Mint(currencyAmountIn, currencyAmountOut, markup)
+    return new Withdraw(currencyAmountIn, currencyAmountOut)
   }
 
   /**
@@ -78,13 +51,13 @@ export class Mint {
    * @param markup
    * @returns
    */
-  public static exactOut(currencyAmountOut: CurrencyAmount, _price: Price, markup: Percent): Mint {
+  public static exactOut(currencyAmountOut: CurrencyAmount, _price: Price): Withdraw {
     const price = _price.invert() // Price now (base: USDT, quote: PE)
     if (price.quoteCurrency !== currencyAmountOut.currency) {
       throw new Error(`currencyAmountOut does\'t match Price.baseCurrency`)
     }
 
     const currencyAmountIn = price.quote(currencyAmountOut)
-    return new Mint(currencyAmountIn, currencyAmountOut, markup)
+    return new Withdraw(currencyAmountIn, currencyAmountOut)
   }
 }

@@ -1081,15 +1081,57 @@ var Mint = /*#__PURE__*/function () {
 
   return Mint;
 }();
+
+/* eslint-disable lines-between-class-members */
 /**
  * Represents a mint executed to the vault.
  */
 
-var Withdraw = function Withdraw(inputAmount, outputAmount) {
-  this.inputAmount = inputAmount;
-  this.outputAmount = outputAmount;
-  this.executionPrice = new Price(this.inputAmount.currency, this.outputAmount.currency, this.inputAmount.raw, this.outputAmount.raw);
-}; // .subtract(inputAmount.divide(100 + feePercent) / 1))
+var Withdraw = /*#__PURE__*/function () {
+  function Withdraw(inputAmount, outputAmount) {
+    this.inputAmount = inputAmount;
+    this.outputAmount = outputAmount;
+    this.executionPrice = new Price(this.inputAmount.currency, this.outputAmount.currency, this.inputAmount.raw, this.outputAmount.raw);
+  }
+  /**
+   * Constructs a Mint object based on exact token minted amount
+   * @param currencyAmountIn (PE)
+   * @param price (base: PE, quote: USDT)
+   * @returns
+   */
+
+
+  Withdraw.exactIn = function exactIn(currencyAmountIn, price) {
+    if (price.baseCurrency !== currencyAmountIn.currency) {
+      throw new Error("currencyAmountOut does't match Price.baseCurrency");
+    }
+
+    var currencyAmountOut = price.quote(currencyAmountIn);
+    return new Withdraw(currencyAmountIn, currencyAmountOut);
+  }
+  /**
+   * Constructs a Mint object based on exact token deposited amount
+   * @param currencyAmountOut (PE)
+   * @param _price (base: PE, quote: USDT)
+   * @param markup
+   * @returns
+   */
+  ;
+
+  Withdraw.exactOut = function exactOut(currencyAmountOut, _price) {
+    var price = _price.invert(); // Price now (base: USDT, quote: PE)
+
+
+    if (price.quoteCurrency !== currencyAmountOut.currency) {
+      throw new Error("currencyAmountOut does't match Price.baseCurrency");
+    }
+
+    var currencyAmountIn = price.quote(currencyAmountOut);
+    return new Withdraw(currencyAmountIn, currencyAmountOut);
+  };
+
+  return Withdraw;
+}();
 
 /**
  * Returns the percent difference between the mid price and the execution price, i.e. price impact.

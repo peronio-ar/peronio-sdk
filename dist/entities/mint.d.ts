@@ -47,21 +47,3 @@ export declare class Mint {
      */
     static exactOut(currencyAmountOut: CurrencyAmount, _price: Price, markup: Percent): Mint;
 }
-/**
- * Represents a mint executed to the vault.
- */
-export declare class Withdraw {
-    /**
-     * The input amount for the trade assuming no slippage.
-     */
-    readonly inputAmount: CurrencyAmount;
-    /**
-     * The output amount for the trade assuming no slippage.
-     */
-    readonly outputAmount: CurrencyAmount;
-    /**
-     * The price expressed in terms of output amount/input amount.
-     */
-    readonly executionPrice: Price;
-    constructor(inputAmount: CurrencyAmount, outputAmount: CurrencyAmount);
-}
