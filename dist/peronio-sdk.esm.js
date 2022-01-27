@@ -1102,10 +1102,9 @@ var Withdraw = /*#__PURE__*/function () {
 
 
   Withdraw.exactIn = function exactIn(currencyAmountIn, price) {
-    if (price.baseCurrency !== currencyAmountIn.currency) {
-      throw new Error("currencyAmountOut does't match Price.baseCurrency");
-    }
-
+    // if (price.baseCurrency !== currencyAmountIn.currency) {
+    //   throw new Error(`exactIn: currencyAmountIn does\'t match Price.baseCurrency`)
+    // }
     var currencyAmountOut = price.quote(currencyAmountIn);
     return new Withdraw(currencyAmountIn, currencyAmountOut);
   }
@@ -1120,11 +1119,10 @@ var Withdraw = /*#__PURE__*/function () {
 
   Withdraw.exactOut = function exactOut(currencyAmountOut, _price) {
     var price = _price.invert(); // Price now (base: USDT, quote: PE)
+    // if (price.quoteCurrency !== currencyAmountOut.currency) {
+    //   throw new Error(`exactOut: currencyAmountOut does\'t match Price.baseCurrency`)
+    // }
 
-
-    if (price.quoteCurrency !== currencyAmountOut.currency) {
-      throw new Error("currencyAmountOut does't match Price.baseCurrency");
-    }
 
     var currencyAmountIn = price.quote(currencyAmountOut);
     return new Withdraw(currencyAmountIn, currencyAmountOut);

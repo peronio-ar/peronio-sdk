@@ -36,9 +36,9 @@ export class Withdraw {
    * @returns
    */
   public static exactIn(currencyAmountIn: CurrencyAmount, price: Price): Withdraw {
-    if (price.baseCurrency !== currencyAmountIn.currency) {
-      throw new Error(`currencyAmountOut does\'t match Price.baseCurrency`)
-    }
+    // if (price.baseCurrency !== currencyAmountIn.currency) {
+    //   throw new Error(`exactIn: currencyAmountIn does\'t match Price.baseCurrency`)
+    // }
 
     const currencyAmountOut = price.quote(currencyAmountIn)
     return new Withdraw(currencyAmountIn, currencyAmountOut)
@@ -53,9 +53,9 @@ export class Withdraw {
    */
   public static exactOut(currencyAmountOut: CurrencyAmount, _price: Price): Withdraw {
     const price = _price.invert() // Price now (base: USDT, quote: PE)
-    if (price.quoteCurrency !== currencyAmountOut.currency) {
-      throw new Error(`currencyAmountOut does\'t match Price.baseCurrency`)
-    }
+    // if (price.quoteCurrency !== currencyAmountOut.currency) {
+    //   throw new Error(`exactOut: currencyAmountOut does\'t match Price.baseCurrency`)
+    // }
 
     const currencyAmountIn = price.quote(currencyAmountOut)
     return new Withdraw(currencyAmountIn, currencyAmountOut)
