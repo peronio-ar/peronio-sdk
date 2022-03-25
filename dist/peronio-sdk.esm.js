@@ -1033,6 +1033,8 @@ var Mint = /*#__PURE__*/function () {
   function Mint(inputAmount, outputAmount, markupPercent) {
     this.inputAmount = inputAmount;
     this.outputAmount = outputAmount;
+    this.minReceive = 1; // TODO: replace
+
     this.markup = markupPercent; // new CurrencyAmount(inputAmount.currency, inputAmount.multiply()
 
     var amount = JSBI.toNumber(inputAmount.raw);
@@ -1596,9 +1598,11 @@ var Minter = /*#__PURE__*/function () {
     var to = validateAndParseAddress(options.recipient); // const amountIn: string = toHex(mint.inputAmount)
 
     var amountOut = toHex$1(mint.outputAmount);
+    var minReceive = mint.minReceive.toString(); // Fix this
+
     return {
       methodName: 'mint',
-      args: [to, amountOut],
+      args: [to, amountOut, minReceive],
       value: ZERO_HEX$1
     };
   }

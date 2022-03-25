@@ -22,6 +22,10 @@ export declare class Mint {
     /**
      * The input amount for the trade assuming no slippage.
      */
+    readonly minReceive: number;
+    /**
+     * The input amount for the trade assuming no slippage.
+     */
     readonly markup: Percent;
     /**
      *
