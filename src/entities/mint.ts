@@ -27,6 +27,11 @@ export class Mint {
   /**
    * The input amount for the trade assuming no slippage.
    */
+  public readonly minReceive: number
+
+  /**
+   * The input amount for the trade assuming no slippage.
+   */
   public readonly markup: Percent
 
   /**
@@ -38,6 +43,7 @@ export class Mint {
   public constructor(inputAmount: CurrencyAmount, outputAmount: CurrencyAmount, markupPercent: Percent) {
     this.inputAmount = inputAmount
     this.outputAmount = outputAmount
+    this.minReceive = 1 // TODO: replace
 
     this.markup = markupPercent
     // new CurrencyAmount(inputAmount.currency, inputAmount.multiply()

@@ -62,11 +62,12 @@ export abstract class Minter {
     const to: string = validateAndParseAddress(options.recipient)
     // const amountIn: string = toHex(mint.inputAmount)
     const amountOut: string = toHex(mint.outputAmount)
+    const minReceive: string = mint.minReceive.toString() // Fix this
 
     return {
       methodName: 'mint',
-      args: [to, amountOut],
-      value: ZERO_HEX,
+      args: [to, amountOut, minReceive],
+      value: ZERO_HEX
     }
   }
 
@@ -82,7 +83,7 @@ export abstract class Minter {
     return {
       methodName: 'withdraw',
       args: [to, amountIn],
-      value: ZERO_HEX,
+      value: ZERO_HEX
     }
   }
 }
