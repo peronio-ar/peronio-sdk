@@ -61,12 +61,12 @@ export abstract class Minter {
   public static mintCallParameters(mint: Mint, options: MintOptions): CallParameters {
     const to: string = validateAndParseAddress(options.recipient)
     // const amountIn: string = toHex(mint.inputAmount)
-    const amountOut: string = toHex(mint.outputAmount)
+    const amountIn: string = toHex(mint.inputAmount)
     const minReceive: string = mint.minReceive.toString() // Fix this
 
     return {
       methodName: 'mint',
-      args: [to, amountOut, minReceive],
+      args: [to, amountIn, minReceive],
       value: ZERO_HEX
     }
   }
