@@ -69,9 +69,9 @@ export class Mint {
    * @returns
    */
   public static exactIn(currencyAmountIn: CurrencyAmount, price: Price, markup: Percent): Mint {
-    if (price.quoteCurrency !== currencyAmountIn.currency) {
-      throw new Error(`currencyAmountOut does\'t match Price.baseCurrency`)
-    }
+    // if (price.quoteCurrency !== currencyAmountIn.currency) {
+    //   throw new Error(`currencyAmountIn does\'t match Price.quoteCurrency`)
+    // }
 
     const currencyAmountOut = price.quote(currencyAmountIn)
     return new Mint(currencyAmountIn, currencyAmountOut, markup)
@@ -86,9 +86,9 @@ export class Mint {
    */
   public static exactOut(currencyAmountOut: CurrencyAmount, _price: Price, markup: Percent): Mint {
     const price = _price.invert() // Price now (base: USDC, quote: PE)
-    if (price.quoteCurrency !== currencyAmountOut.currency) {
-      throw new Error(`currencyAmountOut does\'t match Price.baseCurrency`)
-    }
+    // if (price.quoteCurrency !== currencyAmountOut.currency) {
+    //   throw new Error(`currencyAmountOut does\'t match Price.baseCurrency`)
+    // }
 
     const currencyAmountIn = price.quote(currencyAmountOut)
     return new Mint(currencyAmountIn, currencyAmountOut, markup)

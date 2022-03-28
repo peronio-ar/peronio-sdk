@@ -1053,10 +1053,9 @@ var Mint = /*#__PURE__*/function () {
 
 
   Mint.exactIn = function exactIn(currencyAmountIn, price, markup) {
-    if (price.quoteCurrency !== currencyAmountIn.currency) {
-      throw new Error("currencyAmountOut does't match Price.baseCurrency");
-    }
-
+    // if (price.quoteCurrency !== currencyAmountIn.currency) {
+    //   throw new Error(`currencyAmountIn does\'t match Price.quoteCurrency`)
+    // }
     var currencyAmountOut = price.quote(currencyAmountIn);
     return new Mint(currencyAmountIn, currencyAmountOut, markup);
   }
@@ -1071,11 +1070,10 @@ var Mint = /*#__PURE__*/function () {
 
   Mint.exactOut = function exactOut(currencyAmountOut, _price, markup) {
     var price = _price.invert(); // Price now (base: USDC, quote: PE)
+    // if (price.quoteCurrency !== currencyAmountOut.currency) {
+    //   throw new Error(`currencyAmountOut does\'t match Price.baseCurrency`)
+    // }
 
-
-    if (price.quoteCurrency !== currencyAmountOut.currency) {
-      throw new Error("currencyAmountOut does't match Price.baseCurrency");
-    }
 
     var currencyAmountIn = price.quote(currencyAmountOut);
     return new Mint(currencyAmountIn, currencyAmountOut, markup);
