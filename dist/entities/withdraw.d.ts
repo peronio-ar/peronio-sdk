@@ -19,14 +19,14 @@ export declare class Withdraw {
     /**
      * Constructs a Mint object based on exact token minted amount
      * @param currencyAmountIn (PE)
-     * @param price (base: PE, quote: USDT)
+     * @param price (base: PE, quote: USDC)
      * @returns
      */
     static exactIn(currencyAmountIn: CurrencyAmount, price: Price): Withdraw;
     /**
      * Constructs a Mint object based on exact token deposited amount
      * @param currencyAmountOut (PE)
-     * @param _price (base: PE, quote: USDT)
+     * @param _price (base: PE, quote: USDC)
      * @param markup
      * @returns
      */

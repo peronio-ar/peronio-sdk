@@ -32,7 +32,7 @@ export class Withdraw {
   /**
    * Constructs a Mint object based on exact token minted amount
    * @param currencyAmountIn (PE)
-   * @param price (base: PE, quote: USDT)
+   * @param price (base: PE, quote: USDC)
    * @returns
    */
   public static exactIn(currencyAmountIn: CurrencyAmount, price: Price): Withdraw {
@@ -47,12 +47,12 @@ export class Withdraw {
   /**
    * Constructs a Mint object based on exact token deposited amount
    * @param currencyAmountOut (PE)
-   * @param _price (base: PE, quote: USDT)
+   * @param _price (base: PE, quote: USDC)
    * @param markup
    * @returns
    */
   public static exactOut(currencyAmountOut: CurrencyAmount, _price: Price): Withdraw {
-    const price = _price.invert() // Price now (base: USDT, quote: PE)
+    const price = _price.invert() // Price now (base: USDC, quote: PE)
     // if (price.quoteCurrency !== currencyAmountOut.currency) {
     //   throw new Error(`exactOut: currencyAmountOut does\'t match Price.baseCurrency`)
     // }

@@ -36,8 +36,8 @@ export declare class Mint {
     constructor(inputAmount: CurrencyAmount, outputAmount: CurrencyAmount, markupPercent: Percent);
     /**
      * Constructs a Mint object based on exact token minted amount
-     * @param currencyAmountIn (USDT)
-     * @param price (base: PE, quote: USDT)
+     * @param currencyAmountIn (USDC)
+     * @param price (base: PE, quote: USDC)
      * @param markup
      * @returns
      */
@@ -45,7 +45,7 @@ export declare class Mint {
     /**
      * Constructs a Mint object based on exact token deposited amount
      * @param currencyAmountOut (PE)
-     * @param _price (base: PE, quote: USDT)
+     * @param _price (base: PE, quote: USDC)
      * @param markup
      * @returns
      */

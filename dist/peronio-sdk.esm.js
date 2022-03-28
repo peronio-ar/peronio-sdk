@@ -1045,8 +1045,8 @@ var Mint = /*#__PURE__*/function () {
   }
   /**
    * Constructs a Mint object based on exact token minted amount
-   * @param currencyAmountIn (USDT)
-   * @param price (base: PE, quote: USDT)
+   * @param currencyAmountIn (USDC)
+   * @param price (base: PE, quote: USDC)
    * @param markup
    * @returns
    */
@@ -1063,14 +1063,14 @@ var Mint = /*#__PURE__*/function () {
   /**
    * Constructs a Mint object based on exact token deposited amount
    * @param currencyAmountOut (PE)
-   * @param _price (base: PE, quote: USDT)
+   * @param _price (base: PE, quote: USDC)
    * @param markup
    * @returns
    */
   ;
 
   Mint.exactOut = function exactOut(currencyAmountOut, _price, markup) {
-    var price = _price.invert(); // Price now (base: USDT, quote: PE)
+    var price = _price.invert(); // Price now (base: USDC, quote: PE)
 
 
     if (price.quoteCurrency !== currencyAmountOut.currency) {
@@ -1098,7 +1098,7 @@ var Withdraw = /*#__PURE__*/function () {
   /**
    * Constructs a Mint object based on exact token minted amount
    * @param currencyAmountIn (PE)
-   * @param price (base: PE, quote: USDT)
+   * @param price (base: PE, quote: USDC)
    * @returns
    */
 
@@ -1113,14 +1113,14 @@ var Withdraw = /*#__PURE__*/function () {
   /**
    * Constructs a Mint object based on exact token deposited amount
    * @param currencyAmountOut (PE)
-   * @param _price (base: PE, quote: USDT)
+   * @param _price (base: PE, quote: USDC)
    * @param markup
    * @returns
    */
   ;
 
   Withdraw.exactOut = function exactOut(currencyAmountOut, _price) {
-    var price = _price.invert(); // Price now (base: USDT, quote: PE)
+    var price = _price.invert(); // Price now (base: USDC, quote: PE)
     // if (price.quoteCurrency !== currencyAmountOut.currency) {
     //   throw new Error(`exactOut: currencyAmountOut does\'t match Price.baseCurrency`)
     // }
@@ -1597,12 +1597,12 @@ var Minter = /*#__PURE__*/function () {
   Minter.mintCallParameters = function mintCallParameters(mint, options) {
     var to = validateAndParseAddress(options.recipient); // const amountIn: string = toHex(mint.inputAmount)
 
-    var amountOut = toHex$1(mint.outputAmount);
+    var amountIn = toHex$1(mint.inputAmount);
     var minReceive = mint.minReceive.toString(); // Fix this
 
     return {
       methodName: 'mint',
-      args: [to, amountOut, minReceive],
+      args: [to, amountIn, minReceive],
       value: ZERO_HEX$1
     };
   }
